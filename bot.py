@@ -107,6 +107,8 @@ def determine_time_msg(bday) -> str:
                 now_minutes = 60 - now_minutes
                 if now_minutes > 1: min_s = 's'
                 else: min_s = ''
+                if delta.days == 0:
+                    now_minutes = 60 - now_minutes
                 return day_str + f'{now_hour-1} hour{hour_s} {now_minutes} minute{min_s} until your government age is ${{current_government_age}} + 1 !!!!!'
             
             elif now_hour == 1:
@@ -116,11 +118,17 @@ def determine_time_msg(bday) -> str:
                     now_minutes = 60 -  now_minutes
                 if now_minutes > 1: min_s = 's'
                 if now_minutes == 1:
+                    if delta.days == 0:
+                        now_minutes = 60 - now_minutes
                     return day_str +f'1 more Minute until your government age is ${{current_government_age}} + 1 !!!!!'
                 return f'{now_minutes} minute{min_s} until your government age is ${{current_government_age}} + 1 !'
             
         if delta.days < 0:
             now_hour = (24 - now_hour) + (24*((365 + (delta.days-1)) % 365))%24
+            if now_days < 0:
+                now_days = 365 + now_days
+            
+                now_minutes = 60 - now_minutes
             return f'{now_days} day{day_s} {now_hour-1} hour{hour_s} {now_minutes} minute{min_s} until your government age is ${{current_government_age}} + 1 !!!!!'
 
         
@@ -185,7 +193,8 @@ async def edit_msg_forJane():
     user = bot.get_user(cont.message.author.id)
     await user.send("Love u a lot and hope u have a peaceful birthday - Jaylen ")
 
-#hope it works edwin
+#BUG:
+#if its past ur birthday within 24 hours there will be a minute bug
 bot.run(TOKEN)
 
 
